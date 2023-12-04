@@ -1,7 +1,9 @@
 import { withIronSessionApiRoute, withIronSessionSsr } from "iron-session/next";
 
+const pass = process.env.IRON_SESSION_PASSWORD;
+
 const sessionOptions = {
-  password: "yPo4T7apfbdvctV1sawohoAndQH9qwC94",
+  password: process.env.IRON_SESSION_PASSWORD,
   cookieName: "myapp_cookiename",
   // secure: true should be used in production (HTTPS) but can't be used in development (HTTP)
   cookieOptions: {
