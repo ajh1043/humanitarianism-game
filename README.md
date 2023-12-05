@@ -1,8 +1,8 @@
-## Install instruction
+## Automtic deploy setup for Debian 12
 
 Required packages:
 
-**Create deb repo for Node.js 18
+**Create deb repo for Node.js 18**
 ```
 NODE_MAJOR=18
 echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_MAJOR.x nodistro main" | sudo tee /etc/apt/sources.list.d/nodesource.list
@@ -11,7 +11,7 @@ echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.co
 **Install Required Packages**
 ```
 sudo apt update
-sudo apt install nodejs npm nginx ufw git -y
+sudo apt install nodejs npm nginx ufw git pwgen -y
 ```
 
 **Create user**
@@ -98,14 +98,17 @@ git remote set-url origin https://USERNAME:ACCESS_TOKEN@github.com/USERNAME/huma
 
 **Push Changes**
 ```
+git add --all
 git push
 ```
 
-Download the files from https://github.com/ajh1043/humanitarianism-game.git
+Note: If unable to push, try enabling force push from the repo ruleset and run:
+```
+git push --force
+```
 
-Push changes
 
-**Set up github actions for automatic deployment **
+**Set up github actions for automatic deployment**
 
 Go to YOUR Github repository -> Actions -> Runners
 
@@ -123,10 +126,21 @@ cd /home/final-project/
 git clone YOUR_GITHUB_URL
 ```
 
+**Generate secret keys for session data and token**
+``
+echo "NEXT_PUBLIC_JWT_SECRET_KEY=\"$(pwgen -s -1 64)\"" > ~/secret_keys
+echo "IRON-SESSION-PASSWORD=\"$(pwgen -s -1 32)\"" >> ~/secret_keys
+``
+
+**Copy the secret keys into the project's .env file**
+``
+cp ~/secret_keys ~/humanitarianism-game/.env
+``
+
 **Switch back to root**
 ```
 su -
-cd /home/final-project/action-runner
+cd /home/final-project/actions-runner
 ```
 
 **Setup the runner as a service**
@@ -135,7 +149,7 @@ cd /home/final-project/action-runner
 ./svc.sh start
 ```
 
-** Setup final-project as a service **
+**Setup final-project as a service**
 ```
 nano /etc/systemd/system/final-project.service
 ```
@@ -151,14 +165,13 @@ User=final-project
 Group=final-project
 Restart=on-failure
 Environment=LANG=en_US.UTF-8
-
-#WorkingDirectory=/home/final-project/actions-runner/_work/humanitarianism-game/humanitarianism-game
 WorkingDirectory=/home/final-project/humanitarianism-game
 ExecStart=npm start -- --port 3000
 
 [Install]
 WantedBy=multi-user.target
 ```
+If you used another name for your repository, ensure WorkingDirectory in the above service is changed 
 
 **Enable and start service**
 
