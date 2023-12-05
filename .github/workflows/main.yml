@@ -42,7 +42,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
       - run: echo "REPO_NAME=$(basename ${{ github.repository }})" >> $GITHUB_ENV
-      - run: rm -rf "~/${{ env.REPO_NAME }}"
+      - run: rm -rf "~/${{ env.REPO_NAME }}" && mkdir "~/${{ env.REPO_NAME }}"
       - run: cp -r "../${{ env.REPO_NAME }}" ~/
       - run: cp ~/secret_keys "~/${{ env.REPO_NAME }}/.env"
       - name: Build and run
