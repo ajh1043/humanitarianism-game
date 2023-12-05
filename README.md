@@ -1,4 +1,4 @@
-## Install instruction
+## Automtic deploy setup for Debian 12
 
 Required packages:
 
@@ -98,12 +98,15 @@ git remote set-url origin https://USERNAME:ACCESS_TOKEN@github.com/USERNAME/huma
 
 **Push Changes**
 ```
+git add --all
 git push
 ```
 
-Download the files from https://github.com/ajh1043/humanitarianism-game.git
+Note: If unable to push, try enabling force push from the repo ruleset and run:
+```
+git push --force
+```
 
-Push changes
 
 **Set up github actions for automatic deployment**
 
@@ -162,14 +165,13 @@ User=final-project
 Group=final-project
 Restart=on-failure
 Environment=LANG=en_US.UTF-8
-
-#WorkingDirectory=/home/final-project/actions-runner/_work/humanitarianism-game/humanitarianism-game
 WorkingDirectory=/home/final-project/humanitarianism-game
 ExecStart=npm start -- --port 3000
 
 [Install]
 WantedBy=multi-user.target
 ```
+If you used another name for your repository, ensure WorkingDirectory in the above service is changed 
 
 **Enable and start service**
 

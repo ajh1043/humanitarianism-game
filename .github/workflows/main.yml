@@ -41,11 +41,12 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
-      - run: rm -rf ~/humanitarianism-game && mkdir ~/humanitarianism-game
-      - run: cp -r ../humanitarianism-game ~/
-      - run: cp ~/secret_keys ~/humanitarianism-game/.env
+      - run: echo "REPO_NAME=$(basename ${{ github.repository }})" >> $GITHUB_ENV
+      - run: rm -rf "~/${{ env.REPO_NAME }}"
+      - run: cp -r "../${{ env.REPO_NAME }}" ~/
+      - run: cp ~/secret_keys "~/${{ env.REPO_NAME }}/.env"
       - name: Build and run
-        working-directory: /home/final-project/humanitarianism-game/
+        working-directory: "/home/final-project/${{ env.REPO_NAME }}/"
         run: |
           npm install
           npx prisma migrate deploy
