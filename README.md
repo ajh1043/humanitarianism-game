@@ -129,7 +129,7 @@ git clone YOUR_GITHUB_URL
 **Generate secret keys for session data and token**
 ``
 echo "NEXT_PUBLIC_JWT_SECRET_KEY=\"$(pwgen -s -1 64)\"" > ~/secret_keys
-echo "IRON-SESSION-PASSWORD=\"$(pwgen -s -1 32)\"" >> ~/secret_keys
+echo "IRON_SESSION_PASSWORD=\"$(pwgen -s -1 32)\"" >> ~/secret_keys
 ``
 
 **Copy the secret keys into the project's .env file**
