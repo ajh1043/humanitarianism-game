@@ -1,4 +1,6 @@
 import { prisma } from "../server/db/client";
+import { hashPassword, verifyPassword } from "./password";
+
 
 export async function list_users() {
   let users = await prisma.AdminUser.findMany();
@@ -10,12 +12,28 @@ export async function createUser(username, hashedPassword) {
   return newUser.id;
 }
 
-export async function validate_login(name, password){
-  let userStudent =  await prisma.AdminUser.findUnique({
-    where: {name}
+export async function validate_login(username, password){
+  let user =  await prisma.AdminUser.findUnique({
+    where: {username}
   });
-  return (userStudent.password === password);
-  
+  return (verifyPassword(password, user.password)); 
+}
+
+export async function changePassword(newPassword, userId) {
+  try {
+    const hash = hashPassword(newPassword);
+    await prisma.AdminUser.update({
+      where: {
+        id: userId
+      },
+      data: {
+        password: newPassword
+      }
+    });
+    return true;
+  } catch(error) {
+    return false;
+  }
 }
 
 export async function userExists(username) {

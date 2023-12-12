@@ -21,6 +21,7 @@ model CourseSection {
   id                Int    @id @default(autoincrement())
   name              String @unique
   description       String
+  // path              String @unique
   deployableRegions DeployableRegion[]
   refugeeGens       RefugeeGen[]
   routes            Route[]
