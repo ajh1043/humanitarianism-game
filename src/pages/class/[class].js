@@ -1492,6 +1492,19 @@ export default function Main(props) {
           </div>
         
           )}
+      
+      {loggedIn && (
+        <button
+        className="bordered-button-admin"
+        style={{ position: "fixed", bottom: 9, left: 125}}
+
+        onClick={() => window.location.href = '/admin-settings'}
+      >
+          Settings
+      </button>
+
+      )}
+      
       {!loggedIn && (
         <button
           className="bordered-button-admin"
