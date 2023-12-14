@@ -23,4 +23,3 @@ export  function getCampCapacity(food, healthcare, housing, admin) {
 
     return lowest;
 }
-

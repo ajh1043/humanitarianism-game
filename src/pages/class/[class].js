@@ -15,6 +15,7 @@ import axios from "axios";
 // for token auth
 import { SignJWT } from "jose";
 import { getJwtSecretKey } from "@/lib/token-auth";
+import { playLoopedSound } from "@/lib/audio";
 
 let socket;
 
@@ -593,34 +594,47 @@ export default function Main(props) {
 
           // draw number of refugees above and below the gen icon
           var refugees = stats.totalRefugees.toString();
-          var newRefugees = " (+" + stats.newRefugees.toString() + ")";
-          var refugeeText = refugees + newRefugees;
+          var newRefugees = "+" + stats.newRefugees.toString() + "";
+          var refugeeText = refugees;// + newRefugees;
 
           ctx.font = "16px serif";
           var textWidth = ctx.measureText(refugeeText).width;
+
+          const refugeeBoxPos = {x: genNode.x + genNode.statsOffset.x, y: genNode.y + genNode.statsOffset.y};
+          const refugeeBoxSize = {x: 55, y: 42};
+
           // black outline
           ctx.fillStyle = "black";
           ctx.fillRect(
-            genNode.x - textWidth / 2 - 8,
-            genNode.y - 41,
-            textWidth + 16,
-            22
+            refugeeBoxPos.x - 1,
+            refugeeBoxPos.y - 1,
+            refugeeBoxSize.x + 2,
+            refugeeBoxSize.y + 2
           );
 
           ctx.fillStyle = campStatsBGColor;
           ctx.fillRect(
-            genNode.x - textWidth / 2 - 7,
-            genNode.y - 40,
-            textWidth + 14,
-            20
+            refugeeBoxPos.x,
+            refugeeBoxPos.y,
+            refugeeBoxSize.x,
+            refugeeBoxSize.y
           );
+
+          const iconAndTextWidth = statsIconSize + 5 + ctx.measureText(refugees).width;
+          const iconPosX = refugeeBoxPos.x + refugeeBoxSize.x/2 - iconAndTextWidth/2;
+          const newRefugeesTextPosX = refugeeBoxPos.x + refugeeBoxSize.x / 2 - ctx.measureText(newRefugees).width / 2;
+
+          // draw the refugee icon
+          if (imagesRef.current != null) {
+            const refugeeIconPosX = ctx.measureText(newRefugees).width / 2;
+            ctx.drawImage(imagesRef.current.refugee, iconPosX, refugeeBoxPos.y + 2,
+               statsIconSize, statsIconSize)
+          }
+
           ctx.fillStyle = "black";
-          ctx.fillText(refugeeText, genNode.x - textWidth / 2, genNode.y - 25);
-          //ctx.fillText(refugees, genNode.x - ctx.measureText(refugees).width / 2, genNode.y-30);
-          //ctx.fillText(newRefugees, genNode.x - ctx.measureText(newRefugees).width / 2, genNode.y+30);
-
-          //drawGenStats(ctx, statsPostion, stats);
-
+          ctx.fillText(refugeeText, iconPosX + statsIconSize + 3, refugeeBoxPos.y + 17);
+          ctx.fillText(newRefugees, newRefugeesTextPosX, refugeeBoxPos.y + 36);
+          
           if (drawGenNum) {
             ctx.fillStyle = "Black";
             ctx.fillText(gen_point, genNode.x + 15, genNode.y + 15);
@@ -649,8 +663,6 @@ export default function Main(props) {
       }
     });
   }
-
-  function handleInput(clickLoc, data, scale) {}
 
   // initial useEffect function, will be called on page load
   useEffect(() => {
@@ -752,6 +764,12 @@ export default function Main(props) {
           setTimerIsActive(false);
           setTimerStopTime(0);
           clearInterval(interval);
+          // const sound = new Howl({
+          //   src: ['/timer_stop.mp3']
+          // });
+          // sound.play();
+          playLoopedSound("/timer_stop.mp3", 3);
+          
         }
       }, 1000);
     }
@@ -857,7 +875,6 @@ export default function Main(props) {
 
     socketInitializer();
     return () => {
-      // Add a cleanup function to close the socket connection when the component unmounts
       socket.disconnect();
     };
   }, []);
@@ -987,11 +1004,11 @@ export default function Main(props) {
                   (clickLoc.x < gen.x + radius && // gen node click
                     clickLoc.x > gen.x - radius &&
                     clickLoc.y < gen.y + radius &&
-                    clickLoc.y > gen.y - radius) ||
-                  (clickLoc.x > gen["statsPos"].x && // gen stats click
-                    clickLoc.x < gen["statsPos"].x + genStatsWidth &&
-                    clickLoc.y > gen["statsPos"].y &&
-                    clickLoc.y < gen["statsPos"].y + genStatsHeight)
+                    clickLoc.y > gen.y - radius) //||
+                  // (clickLoc.x > gen["statsPos"].x && // gen stats click
+                  //   clickLoc.x < gen["statsPos"].x + genStatsWidth &&
+                  //   clickLoc.y > gen["statsPos"].y &&
+                  //   clickLoc.y < gen["statsPos"].y + genStatsHeight)
                 ) {
                   console.log("clicked on gen " + genName);
                   setActiveTab("refugeeGeneration");

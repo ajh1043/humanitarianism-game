@@ -22,7 +22,7 @@ function AdminSettings(props) {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen"> {/* Centering container */}
+    <div className="flex flex-col items-center h-screen"> {/* Centering container */}
       <div className="side-panel-header fixed top-0 left-0 right-0 bg-black z-10"> {/* Fixed position */}
         <button
           className={`tab-button ${activeTab === "password" ? "active" : ""}`}
