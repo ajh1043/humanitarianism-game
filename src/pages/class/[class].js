@@ -16,6 +16,8 @@ import axios from "axios";
 import { SignJWT } from "jose";
 import { getJwtSecretKey } from "@/lib/token-auth";
 import { playLoopedSound } from "@/lib/audio";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 
 let socket;
 
@@ -1483,15 +1485,39 @@ export default function Main(props) {
         >
           <img src="/logout.png" width="32" height="32"/>
         </button>
+
       )}
+
       {loggedIn && (
         <button
-          className="bordered-button-togglepanel"
-          onClick={togglePanel}
-          style={{ position: "fixed", bottom: 0, right: 0 }}
+          className="bordered-button-admin"
+          style={{ position: "fixed", bottom: 7, left: 123}}
+          onClick={() => window.location.href = '/admin-settings'}
         >
-          Toggle Panel
+          <img src="/settings.png" width="32" height="32"/>
         </button>
+
+      )}
+
+      {loggedIn && (
+        <div
+        className="toggle-panel-icons"
+        style={{ position: 'fixed', bottom: '50%', right: 0, cursor: 'pointer' }}
+        onClick={togglePanel}
+      >
+        <FontAwesomeIcon icon={faChevronLeft} className={`text-green-500 text-xl bg-black rounded-full left-[-50px] p-2 ${isPanelOpen ? 'hidden' : ''}`}
+            style={{ fontSize: '24px', }}/>
+        <FontAwesomeIcon icon={faChevronRight} style={{ fontSize: '24px',
+      
+            backgroundColor: 'black',
+            borderRadius: '50%',
+            padding: '10px',
+            position: 'fixed',
+            right: '300px',
+            top: '50%',
+            transform: 'translateY(-50%)', }} 
+          className={`text-red-500  ${!isPanelOpen ? 'hidden' : ''}`} />
+      </div>
       )}
       {!loggedIn && (
         <button
@@ -1511,6 +1537,7 @@ export default function Main(props) {
         <img src="/home.png" width="32" height="32" />
         </button>
       </Link>
+      
 
       {/* Admin Popup */}
       {showAdminPopup && (

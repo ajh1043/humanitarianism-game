@@ -1,6 +1,8 @@
 ## Automtic deploy setup for Debian 12
 
-Required packages:
+**Enable memory swapping on your server so you don't run out of memory compiling**
+
+[How To Add Swap Space on Debian 11](https://www.digitalocean.com/community/tutorials/how-to-add-swap-space-on-debian-11)
 
 **Create deb repo for Node.js 18**
 ```
@@ -19,7 +21,7 @@ sudo apt install nodejs npm nginx ufw git pwgen -y
 sudo adduser final-project
 ```
 
-**Give final-project user specific sudo permisions **
+**Give final-project user specific sudo permisions**
 ```
 sudo echo 'final-project ALL=(root) NOPASSWD: /usr/bin/systemctl' >> /etc/sudoers
 ```
@@ -33,14 +35,11 @@ sudo rm  /etc/nginx/sites-available/default
 
 **Edit nginx site config**
 
-
-
 ```
-
 sudo nano /etc/nginx/sites-available/podi1056
-
+```
 Paste the following:
-
+```
 server {
     listen 80;
     listen [::]:80;
@@ -51,10 +50,12 @@ server {
          proxy_pass http://localhost:3000;
     }
 }
-
+```
 Press control + x and then y to save
 
+**Enable nginx config**
 
+```
 ln -s /etc/nginx/sites-available/podi1056 /etc/nginx/sites-enabled 
 rm /etc/nginx/sites-enabled/default
 
@@ -69,13 +70,22 @@ systemctl enable ufw
 ufw allow 80/tcp
 ```
 
+**Note: If you want to use ssl (https), allow port 443 as  well**
+```
+ufw allow 443/tcp
+```
+
+**If you wish to use ssl, you need to use Let's Encrypt to generate a certificate**
+
+[How To Secure Nginx with Let's Encrypt on Debian 11](https://www.digitalocean.com/community/tutorials/how-to-secure-nginx-with-let-s-encrypt-on-debian-11)
+
 **Login as final-project on the server**
 ```
 su final-project
 cd ~
 ```
 
-**Create a copy of the repository **
+**Create a copy of the repository**
 
 Create a new repository on github using your personal github.com account
 Name it "humanitarianism-game"
@@ -127,15 +137,17 @@ git clone YOUR_GITHUB_URL
 ```
 
 **Generate secret keys for session data and token**
-``
+
+```
 echo "NEXT_PUBLIC_JWT_SECRET_KEY=\"$(pwgen -s -1 64)\"" > ~/secret_keys
+
 echo "IRON_SESSION_PASSWORD=\"$(pwgen -s -1 32)\"" >> ~/secret_keys
-``
+```
 
 **Copy the secret keys into the project's .env file**
-``
+```
 cp ~/secret_keys ~/humanitarianism-game/.env
-``
+```
 
 **Switch back to root**
 ```
