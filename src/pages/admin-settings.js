@@ -23,8 +23,14 @@ function AdminSettings(props) {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen"> {/* Centering container */}
+    <div className="flex flex-col items-center h-screen"> {/* Centering container */}
       <div className="side-panel-header fixed top-0 left-0 right-0 bg-black z-10"> {/* Fixed position */}
+      <button
+          className="tab-button m-auto" // Aligns to the right
+          onClick={navigateToHome}
+        >
+          Go to Home
+        </button>
         <button
           className={`tab-button ${activeTab === "password" ? "active" : ""}`}
           onClick={() => setActiveTab("password")}
@@ -37,12 +43,7 @@ function AdminSettings(props) {
         >
           Edit Classes
         </button>
-        <button
-          className="tab-button ml-auto" // Aligns to the right
-          onClick={navigateToHome}
-        >
-          Go to Home
-        </button>
+        
       </div>
       <div className="mt-16"> {/* Margin to avoid overlapping with fixed tabs */}
         {activeTab === "password" && (

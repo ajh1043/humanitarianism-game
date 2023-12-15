@@ -55,7 +55,7 @@ function ChangePassword() {
   
     return (
         <div className="p-4 flex flex-col items-center transition-all duration-300 ease-in-out transform">
-          <div className="bg-blue-200 rounded-lg p-6 mb-8 w-72">
+          <div className="rounded-lg p-6 mb-8 w-72">
             <h3 className="text-xl font-bold mb-4 text-center">Change Admin Password</h3>
             {changeSuccessful && (
               <h2 className="text-green-500 text-center opacity-0">
